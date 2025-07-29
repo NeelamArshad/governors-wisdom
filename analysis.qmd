@@ -32,24 +32,55 @@ For this assignment, we will use the `governors` dataset, which contains informa
 
 * Explore the data. What is the outcome variable? How is it distributed?
 
+```{r}
+governors
+glimpse(governors)
+summary(governors)
+```
 
+```{r}
+library(ggplot2)
+
+ggplot(governors, aes(x = lived_after)) +
+  geom_histogram(binwidth = 5, fill = "steelblue", color = "white", boundary = 0) +
+  labs(
+    title = "Distribution of Years Governors Lived After Election",
+    x = "Years Lived After Election",
+    y = "Number of Governors"
+  ) +
+  theme_minimal()
+```
 
 ### Preceptor Table
 
 What sorts of questions are we trying to answer?
+Do wining candidates live longer after elections compared to the losing ones?
 
 In order to build the Preceptor Table, we need to know: Is the model causal or predictive? What are units? What are the outcomes? What are the covariates? What are the treatments? Describe the mathematical Structure of the model.
 
-
+The model is causal. Units are election candidates. Outcome variable is the years lived after. Treatment is wining election or not. Covariates are age, sex and party.
+The mathematical structure of the model is linear regression.
 
 ### Population Table 
 
 
 Describe the Population Table in your own words—what does each row represent in this context? Then, for each of the four key assumptions (validity, stability, representativeness, and unconfoundedness), provide both a definition in your own words and one specific counter-example for each assumption. 
 
+Population table is the unit/time combination e.g., Individuals/at the time of election.
+Validity is the consistency between columns of the preceptor table. It might not hold as other variable like exercise can be included but not in the preceptor table. 
+Stability is the consistency anong all 3 columns of the preceptor table. It might not hold as over the time people might have lived longer based on better healthcare facilities.
+Representativeness might not hold as the most of the data is from larger states than the smaller ones. So, it's not representative of whole population.
+Unconfoundedness is the assumption that the outcome does not dictate the assignment of the treatment. It might not hold as external factors such as wealth might effect the outcome variable and it is not included in the data.
 
 
 ### Modeling 
 
 The outcome variable in this study is `death_age`, which is the age each political candidate died. What kind of regression model should you use to predict or explain death_age? Explain your choice based on what kind of variable `death_age` is?
 
+
+```{r}
+lm(death_age ~ election_age + year, data = governors)
+```
+
+There is not much correlation between wining the election and years lived after that.
+We used linear regression because death_age is a continuous dependent variable that we want to predict or explain using other independent variables (like election age and year).
